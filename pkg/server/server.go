@@ -4,6 +4,7 @@ import (
 	"github.com/conductant/gohm/pkg/resource"
 	"github.com/conductant/gohm/pkg/server"
 	"github.com/conductant/gohm/pkg/version"
+	"github.com/conductant/kat-machine/pkg/machine"
 	"github.com/golang/glog"
 	"golang.org/x/net/context"
 	"net/http"
@@ -55,6 +56,27 @@ func (this *Server) Start() <-chan error {
 				glog.Infoln("Showing version info.")
 				server.Marshal(resp, req, version.BuildInfo())
 			}).
+		Route(
+			server.Endpoint{
+				UrlRoute:   "/v1/driver/",
+				HttpMethod: server.GET,
+				AuthScope:  server.AuthScopeNone,
+			}).
+		To(machine.ListDrivers).
+		Route(
+			server.Endpoint{
+				UrlRoute:   "/v1/driver/{driver}/options",
+				HttpMethod: server.GET,
+				AuthScope:  server.AuthScopeNone,
+			}).
+		To(machine.DriverOptions).
+		Route(
+			server.Endpoint{
+				UrlRoute:   "/v1/machine/{driver}/host/{name}",
+				HttpMethod: server.POST,
+				AuthScope:  server.AuthScopeNone,
+			}).
+		To(machine.CreateInstance).
 		Route(
 			server.Endpoint{
 				UrlRoute:   "/quitquitquit",
