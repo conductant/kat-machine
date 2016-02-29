@@ -72,11 +72,35 @@ func (this *Server) Start() <-chan error {
 		To(machine.DriverOptions).
 		Route(
 			server.Endpoint{
-				UrlRoute:   "/v1/machine/{driver}/host/{name}",
+				UrlRoute:   "/v1/machine/{driver}/{name}",
 				HttpMethod: server.POST,
 				AuthScope:  server.AuthScopeNone,
 			}).
 		To(machine.CreateInstance).
+		Route(
+			server.Endpoint{
+				UrlRoute:   "/v1/host/{driver}/{name}",
+				HttpMethod: server.GET,
+				AuthScope:  server.AuthScopeNone,
+			}).
+		To(machine.GetInstanceState).
+		Route(
+			server.Endpoint{
+				UrlRoute:   "/v1/host/{driver}/{name}",
+				HttpMethod: server.PUT,
+				UrlQueries: server.UrlQueries{
+					"action": "", // start | stop | restart | kill
+				},
+				AuthScope: server.AuthScopeNone,
+			}).
+		To(machine.PutInstanceState).
+		Route(
+			server.Endpoint{
+				UrlRoute:   "/v1/host/{driver}/{name}",
+				HttpMethod: server.DELETE,
+				AuthScope:  server.AuthScopeNone,
+			}).
+		To(machine.RemoveInstance).
 		Route(
 			server.Endpoint{
 				UrlRoute:   "/quitquitquit",
