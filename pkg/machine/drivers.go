@@ -63,10 +63,20 @@ func (f jsonFlags) Bool(key string) bool {
 	return false
 }
 
-func getStorePath(ctx context.Context, provider string) string {
+func getStoreRoot(ctx context.Context) string {
 	// TOOD - Allow user to set this and storePath be loaded based on user
 	wd, _ := os.Getwd()
-	storePath := path.Join(wd, ".machine", provider)
+	rootPath := path.Join(wd, ".machine")
+	err := os.MkdirAll(rootPath, 0755)
+	if err != nil {
+		panic(err)
+	}
+	return rootPath
+}
+
+func getStorePath(ctx context.Context, provider string) string {
+	// TOOD - Allow user to set this and storePath be loaded based on user
+	storePath := path.Join(getStoreRoot(ctx), provider)
 	err := os.MkdirAll(storePath, 0755)
 	if err != nil {
 		panic(err)

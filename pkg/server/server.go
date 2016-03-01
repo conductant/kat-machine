@@ -79,6 +79,20 @@ func (this *Server) Start() <-chan error {
 		To(machine.CreateInstance).
 		Route(
 			server.Endpoint{
+				UrlRoute:   "/v1/host/",
+				HttpMethod: server.GET,
+				AuthScope:  server.AuthScopeNone,
+			}).
+		To(machine.ListAllHosts).
+		Route(
+			server.Endpoint{
+				UrlRoute:   "/v1/host/{driver}/",
+				HttpMethod: server.GET,
+				AuthScope:  server.AuthScopeNone,
+			}).
+		To(machine.ListAllHostsByDriver).
+		Route(
+			server.Endpoint{
 				UrlRoute:   "/v1/host/{driver}/{name}",
 				HttpMethod: server.GET,
 				AuthScope:  server.AuthScopeNone,
